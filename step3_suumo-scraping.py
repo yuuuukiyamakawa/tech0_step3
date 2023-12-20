@@ -41,7 +41,8 @@ for i in range(1,max_page+1):
         title = content.find('div', class_= 'cassetteitem_content-title').text
         address = content.find('li', class_= 'cassetteitem_detail-col1').text
         access = content.find('li', class_= 'cassetteitem_detail-col2').text
-        age = content.find('li', class_= 'cassetteitem_detail-col3').text
+        age = content.find('li', class_= 'cassetteitem_detail-col3').find_all('div')[0].text
+        story = content.find('li', class_= 'cassetteitem_detail-col3').find_all('div')[1].text
 
         # テーブルの行情報の取得
         tr_tags = table.find_all('tr',class_='js-cassette_link')
@@ -60,6 +61,7 @@ for i in range(1,max_page+1):
                 'address':address,
                 'access':access,
                 'age':age,
+                'story':story,
                 'floor':floor.text,
                 'fee':fee.text,
                 'management_fee':management_fee.text,
@@ -71,6 +73,8 @@ for i in range(1,max_page+1):
 
             data_list.append(data)
 
+    # データフレームを作成する
+    df = pd.DataFrame(data_list)
 
 
 # 使用するGoogleSheetsAPI、GoogleDriveAPI情報の指定
@@ -80,7 +84,7 @@ SCOPES = [
 ]
 
 # 秘密鍵のjsonファイルを指定
-SEVICE_ACCOUNT_FILE = 'tech0-step3-407213-7ca2f8b3a8eb.json'
+SEVICE_ACCOUNT_FILE = ''
 
 # 認証情報を作成
 credentials = ServiceAccountCredentials.from_json_keyfile_name(SEVICE_ACCOUNT_FILE, SCOPES)
@@ -89,7 +93,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(SEVICE_ACCOUNT_FI
 gs = gspread.authorize(credentials)
 
 # 編集するスプレッドシートとワークシートの指定
-SPREADSHEET_KEY = '1RN3MBSM-864r1Me1hdgOZmWzXY0NLMJsb7O6FBogg6k'
+SPREADSHEET_KEY = ''
 workbook = gs.open_by_key(SPREADSHEET_KEY)
 worksheet = workbook.worksheet("シート1")
 
