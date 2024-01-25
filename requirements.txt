@@ -1,2 +1,5 @@
 streamlit_folium
 gspread
+oauth2client.service_account
+dotenv
+os
